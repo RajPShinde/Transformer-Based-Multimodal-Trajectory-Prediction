@@ -45,16 +45,15 @@ its neighbors, the local road graph, and traffic-light states. It produces 32 ca
 
 
 **Outputs**
-1. ![curve](output/test_random_01.png)
-2. ![curve](output/test_random_02.png)
-3. ![curve](output/test_turn_like_18.png)
-4. ![curve](output/test_random_12.png)
-5. ![curve](output/test_turn_like_13.png)
-6. ![curve](output/test_random_00.png)
-7. ![curve](output/test_random_09.png)
-8. ![curve](output/test_random_11.png)
-9. ![curve](output/test_random_16.png)
-10. ![curve](output/test_worst_00_minADE_38_2_m.png)
+<img src="/output/TEST_random_01.png"/>
+<img src="/output/TEST_random_02.png"/>
+<img src="/output/TEST_turn_like_18.png"/>
+<img src="/output/TEST_random_12.png"/>
+<img src="/output/TEST_turn_like_13.png"/>
+<img src="/output/TEST_random_00.png"/>
+<img src="/output/TEST_random_09.png"/>
+<img src="/output/TEST_random_11.png"/>
+<img src="/output/TEST_random_16.png"/>
 
 ## Key finding
 
