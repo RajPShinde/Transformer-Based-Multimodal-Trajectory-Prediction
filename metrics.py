@@ -230,10 +230,9 @@ def evaluate(model, scenes, name):
 
 
 def ranking_gap_table(model, scenes, batch_size=512):
-    """Top-k vs perfect ranking (best of all modes) per agent type, printed as the README's markdown table."""
+    """Top-k vs perfect ranking (best of all modes) per agent type: how much accuracy the ranking loses."""
     device = _device(model)
     model.eval()
-    names = ["Vehicle", "Pedestrian", "Cyclist"]
     acc = {k: [] for k in ["type", "ade6", "fde6", "ade32", "fde32"]}
     with torch.no_grad():
         for i in range(0, len(scenes), batch_size):
@@ -262,19 +261,11 @@ def ranking_gap_table(model, scenes, batch_size=512):
                 r["fde32"][m].mean().item(), (r["fde32"][m] > MISS_THRESHOLD_M).float().mean().item())
 
     all_ = torch.ones(len(r["type"]), dtype=torch.bool)
-    rows_ = [("**All**", _stats(all_), True)] + [(n, _stats(r["type"] == t), False) for t, n in enumerate(names)]
+    rows_ = [("all", _stats(all_))] + [(n, _stats(r["type"] == t)) for t, n in enumerate(TYPE_SLOT_NAMES)]
 
-    print("| Type | n | minADE (m) | minFDE (m) | Miss rate | minADE with perfect ranking (m) |")
-    print("|---|---|---|---|---|---|")
-    for name, s, bold in rows_:
-        n, a6, f6, m6, a32, f32, m32 = s
-        if bold:
-            print(f"| {name} | {n:,} | **{a6:.2f}** | **{f6:.2f}** | **{m6:.1%}** | **{a32:.2f}** |")
-        else:
-            print(f"| {name} | {n:,} | {a6:.2f} | {f6:.2f} | {m6:.1%} | {a32:.2f} |")
-
-    print("\nFor reference, perfect ranking on the other metrics:")
-    for name, s, _ in rows_:
-        print(f"  {name.strip('*'):<10} minFDE {s[5]:.2f} m  miss rate {s[6]:.1%}")
+    print(f"{'':<19}{f'top-{EVAL_TOP_K} (model ranking)':<29}best of {NUM_MODES} (perfect ranking)")
+    print(f"{'type':<10}{'n':>7}  " + f"{'minADE':>8}{'minFDE':>8}{'MR':>8}     " * 2)
+    for name, (n, a6, f6, m6, a32, f32, m32) in rows_:
+        print(f"{name:<10}{n:>7}  {a6:>8.2f}{f6:>8.2f}{m6:>8.1%}     {a32:>8.2f}{f32:>8.2f}{m32:>8.1%}")
     model.train()
     return r
